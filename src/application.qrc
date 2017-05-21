@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>../res/qtorus_logo.png</file>
+    </qresource>
+</RCC>
