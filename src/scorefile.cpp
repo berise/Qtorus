@@ -135,21 +135,19 @@ void TScoreFile::write()
 void TScoreFile::read()
 {
 	QFile f(TORUS_SCORE_FILE);
+    ScoreData sd;
 
 	if( f.open(QIODevice::ReadOnly) == true )
 	{
-		ScoreData sd;
-
 		while( f.atEnd() != true )
 		{		
 			f.read( (char *) &sd, sizeof( ScoreData ) );
-			push_back( sd.getName(), sd.getScore() );
+            push_back( sd.theName, sd.theScore );
 		}
 
-		//int bb = theScoreVector.size() ;
-
-		f.close(); 
+        //int bb = theScoreVector.size();
 	}
+    f.close();
 }
 
 int TScoreFile::getMinScore()

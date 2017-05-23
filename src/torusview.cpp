@@ -14,6 +14,7 @@
 #include "torusinternal.h"
 #include "torusview.h"
 #include "scorefile.h"
+#include "ui_top10dialog.h"
 
 #include "../res/toruses.h"
 #include "../res/sidebar.h"
@@ -235,7 +236,7 @@ void TorusView::keyPressEvent( QKeyEvent *event )
 		break;
 
 	// Following function keys must be disabled in release build
-#ifdef __DEBUG__
+//#ifdef __DEBUG__
 	//	debug
 	case Qt::Key_F3:
 		m_pTI->increaseLevel();
@@ -251,22 +252,28 @@ void TorusView::keyPressEvent( QKeyEvent *event )
 		updateView();
 		break;	
 
+        /*
 	case Qt::Key_F6:
-	{
-		Top10Dialog	td(this );
+	{        
+        Ui::Top10Dialog	td;
 
-		if( td.ShowModal() == wxID_OK )
+        QDialog *dialog = new QDialog;
+        td.setupUi(dialog);
+
+        if(dialog->exec() == QDialog::Accepted) // YesButton clicked }
 		{
-			QMessageBox( td.m_wxsName );
+            QMessageBox box;
+            box.setText( td.player_name->text() );
+            box.exec();
 		}
 		break;
-	}
+    }*/
 
 	case Qt::Key_F9:
 		OnGameOver();
 		//Refresh();
 		break;
-#endif
+//#endif
 
 	default: 
 			//event.Skip(); wx
@@ -957,21 +964,22 @@ void TorusView::OnGameOver()
 
 	//	TScoreFile의 sort predicate인 MinScore과 상응해야 한다.
 	if( m_nScore > m_pScoreFile->getMinScore() )
-	{
-	/*
-		Top10Dialog	td(this );
+	{	
+        Ui::Top10Dialog	td;
 
-		if( td.ShowModal() == wxID_OK )
+        QDialog *dialog = new QDialog;
+        td.setupUi(dialog);
+
+        if(dialog->exec() == QDialog::Accepted) // YesButton clicked }
 		{
 			//wxMessageBox( td.m_wxsName ); 
-			m_pScoreFile->push_back( td.m_wxsName, m_nScore );
+            m_pScoreFile->push_back( td.player_name->text().toUtf8(), m_nScore );
 		}
 		else
 		{
 			m_pScoreFile->push_back( "Noname", m_nScore );
 		}
 		m_pScoreFile->write();
-		*/
 	} 
 	delete m_pScoreFile;
 	

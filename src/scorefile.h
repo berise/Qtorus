@@ -36,8 +36,8 @@ class ScoreData
 public:		
 	ScoreData( const char * aName = "", int aScore = 0 )
 	{
-		setName(aName);
-		theNameString = aName;
+        setName(aName);
+        //theNameString = aName;
 		setScore(aScore);
 	};
 
@@ -47,16 +47,16 @@ public:
 	const char * getName() const		{		return theNameString.c_str();	}
 	void setName( const char * aName )	{		
 		strcpy( theName, aName );
-		theNameString = aName;
+        //theNameString = aName;
 	}
 
 	int	getScore() const				{		return theScore;	}
 	void setScore( const int aScore )	{		theScore = aScore;	}
 
-private:
-	char theName[128];
-	std::string theNameString;
+// var
+	char theName[128];	
 	int theScore;
+    std::string theNameString;
 };
 
 
