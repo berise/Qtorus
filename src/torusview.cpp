@@ -571,38 +571,31 @@ void TorusView::drawScore(QPainter &painter)
 	int nBaseY	=	0;
 	int nBaseX	=	client_rect.width()/2 - m_ScoreSize.width()/2;
 
+    QPen pen(Qt::blue);
 	QBrush brush(Qt::white);
-	painter.setBrush(brush);
 
-	painter.drawRect( nBaseX, nBaseY, m_ScoreSize.width(), m_ScoreSize.height() );
+    painter.setPen(pen);
+    painter.setBrush(brush);
 
-/*
-	int w, h;
-	//dc.SetTextForeground(*wxWHITE);
-	//score_string.Printf("%#08d", m_nScore );
-	//	draw a score at center.
-	dc.GetTextExtent( score_string, &w, &h );	
-	dc.DrawText( score_string, nBaseX + m_ScoreSize.width()/2 - w/2, nBaseY );
-	*/
+    painter.drawRect( nBaseX, nBaseY, m_ScoreSize.width(), m_ScoreSize.height() );
+
 	QFont f;
 	f.setPixelSize(18);
-  QFontMetrics fm(f);
+    QFontMetrics fm(f);
 	painter.setFont(f);
 
 	score_string = QString("%1").arg(m_nScore, 8, 10,QChar('0'));
 	fm.boundingRect(score_string);
-//	painter.drawText(nBaseX + m_ScoreSize.width()/2 - fm.width(score_string)/2, fm.height(), score_string);
+//    painter.drawText(nBaseX + m_ScoreSize.width()/2 - fm.width(score_string)/2, fm.height(), score_string);
 
 
-	painter.drawText( QRect(nBaseX, 
-													nBaseY, 
-													m_ScoreSize.width(),
-													m_ScoreSize.height()),
-										Qt::AlignCenter,
-										score_string);
-
-
-
+    painter.drawText( QRect(nBaseX,
+                            nBaseY,
+                            m_ScoreSize.width(),
+                            m_ScoreSize.height()),
+                      Qt::AlignCenter,
+                      score_string);
+    painter.setPen(QPen(Qt::white));
 }
 
 

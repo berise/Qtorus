@@ -1,13 +1,12 @@
 #include <algorithm>
 #include <functional>
 
-#include "scorefile.h" 
+
 #include <QFile>
 
-static const char * TORUS_SCORE_FILE = "highscore";
+#include "global.h"
+#include "scorefile.h"
 
-//	Max count of Torus Top Players
-const int TORUS_MAX_TOP_PLAYERS	=	10; 
 
 
 //
@@ -118,12 +117,14 @@ void TScoreFile::write()
 {
 	//wxFile f;
 	QFile f(TORUS_SCORE_FILE);
+    QDataStream stream(&f);
 
 	if( f.open(QIODevice::WriteOnly) == true )
 	{
 		for( int i = 0; i < TORUS_MAX_TOP_PLAYERS; i++ )
 		{
-			f.write( (const char *) &(theScoreVector[i]), sizeof( ScoreData ) );
+            stream << theScoreVector[i];
+            //f.write( (const char *) &(theScoreVector[i]), sizeof( ScoreData ) );
 		}	
 
 		f.close();
@@ -135,13 +136,15 @@ void TScoreFile::write()
 void TScoreFile::read()
 {
 	QFile f(TORUS_SCORE_FILE);
+    QDataStream stream(&f);
     ScoreData sd;
 
 	if( f.open(QIODevice::ReadOnly) == true )
 	{
 		while( f.atEnd() != true )
 		{		
-			f.read( (char *) &sd, sizeof( ScoreData ) );
+            stream >> sd;
+            //f.read( (char *) &sd, sizeof( ScoreData ) );
             push_back( sd.theName, sd.theScore );
 		}
 

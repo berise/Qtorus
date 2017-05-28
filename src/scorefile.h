@@ -28,6 +28,7 @@
 #include <vector>
 #include <string>
 #include <string.h>
+#include <QDataStream>
 #include "type.h"
 
 
@@ -53,11 +54,31 @@ public:
 	int	getScore() const				{		return theScore;	}
 	void setScore( const int aScore )	{		theScore = aScore;	}
 
+
+public:
+    friend QDataStream & operator<<(QDataStream &stream, const ScoreData &data)
+    {
+        stream.writeRawData( (const char *) data.theName, 128);
+        stream << data.theScore;
+        return stream;
+    }
+
+
+    friend QDataStream & operator>>(QDataStream &stream, ScoreData &data)
+    {
+        QString s;
+        stream.readRawData((char *)data.theName, 128);
+        stream >> data.theScore;
+        //strcpy(data.theName, s.toUtf8());
+        return stream;
+    }
+
 // var
 	char theName[128];	
 	int theScore;
     std::string theNameString;
 };
+
 
 
 typedef std::vector<ScoreData> ScoreVector; 

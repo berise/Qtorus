@@ -65,18 +65,15 @@ protected:
     QStatusBar *statusBar();
 
 
-public slots:
-    void newFile();
-    void open();
-    bool save();
-    bool saveAs();
-    void about();
-    void documentWasModified();
+public slots:    
     void action_preference();
+    void action_qtorus();
+    void action_qt();
+    void action_exit();
 
 private:
     Ui_MainWindow *ui;
-    void tPopulateTree();
+    void readScore();
 
 
 

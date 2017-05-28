@@ -70,6 +70,12 @@
 #define TORUS_MAX_WIDTH			500
 
 
+#define TORUS_SCORE_FILE "highscore"
+
+//	Max count of Torus Top Players
+const int TORUS_MAX_TOP_PLAYERS	= 10;
+
+
 
 /*
  *	clear method for scoring
