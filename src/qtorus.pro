@@ -21,8 +21,7 @@ HEADERS += global.h \
            type.h  \
 	   about.h \
            qtorus.h \
-../res/toruses.h ../res/sidebar.h ../res/pin.h \
-    top10dialog.h
+../res/toruses.h ../res/sidebar.h ../res/pin.h
 
 SOURCES += pin.cpp \
            pipe.cpp \
@@ -35,8 +34,7 @@ SOURCES += pin.cpp \
 #           torusthread.cpp \
            torusview.cpp \
            qtorus.cpp \
-           about.cpp \
-    top10dialog.cpp
+           about.cpp
 
 RESOURCES = \
     application.qrc
