@@ -41,13 +41,13 @@ TorusInternal::~TorusInternal()
 
 void TorusInternal::destroyPipe()
 {
-	for_each( m_pPV->begin(), m_pPV->end(), delete_object< TPipe >() );
+    for_each( m_pPV->begin(), m_pPV->end(), torus::delete_object< TPipe >() );
 	zap( m_pPV );
 }
 
 void TorusInternal::destroyRoll()
 {
-	for_each( m_pRV->begin(), m_pRV->end(), delete_object< TRoller >() );
+    for_each( m_pRV->begin(), m_pRV->end(), torus::delete_object< TRoller >() );
 	zap( m_pRV );
 }
 
@@ -97,7 +97,7 @@ void TorusInternal::initPipe( int nLevel )
 	}
 
 	//	파이프 내부에 쌓인 토러스를 모두 없앰.	
-	for_each( m_pPV->begin(), m_pPV->end(), clear_pipe() ); 
+    for_each( m_pPV->begin(), m_pPV->end(), torus::clear_pipe() );
 }
 
 
@@ -238,7 +238,7 @@ int TorusInternal::getPipeSize()
 //	이 함수는 clearRow에서 사용된다.
 int TorusInternal::getMinimumPipeSize()
 {
-	TPipeVector::iterator result = min_element( m_pPV->begin(), m_pPV->end(), minimum() ); 
+    TPipeVector::iterator result = min_element( m_pPV->begin(), m_pPV->end(), torus::minimum() );
 
 	return (*result)->getSize();
 
@@ -246,7 +246,7 @@ int TorusInternal::getMinimumPipeSize()
 
 int TorusInternal::getMaximumPipeSize()
 {
-	TPipeVector::iterator result = min_element( m_pPV->begin(), m_pPV->end(), maximum() );
+    TPipeVector::iterator result = min_element( m_pPV->begin(), m_pPV->end(), torus::maximum() );
 
 	return (*result)->getSize();
 }
@@ -349,7 +349,7 @@ bool TorusInternal::isAllClear()
 	
 	//	get pipe clear status
 	TPipeVector::iterator pvIter;	
-	pvIter = find_if( m_pPV->begin(), m_pPV->end(), is_empty() );
+    pvIter = find_if( m_pPV->begin(), m_pPV->end(), torus::is_empty() );
 	if( pvIter == m_pPV->end() )
 	{
 		bPipeClear = true;
@@ -371,7 +371,7 @@ void TorusInternal::clearRow( int nRow )
 
 	if( nRow <= nMinimumPipeSize )
 	{
-		for_each( m_pPV->begin(), m_pPV->end(), clear_row( nRow ) );
+        for_each( m_pPV->begin(), m_pPV->end(), torus::clear_row( nRow ) );
 	}
 }
 
@@ -380,7 +380,7 @@ bool TorusInternal::isPipeEmpty()
 {
 	TPipeVector::iterator pvIter;
 	
-	pvIter = find_if( m_pPV->begin(), m_pPV->end(), is_empty() );
+    pvIter = find_if( m_pPV->begin(), m_pPV->end(), torus::is_empty() );
 
 	return pvIter == m_pPV->end();
 }
@@ -388,14 +388,14 @@ bool TorusInternal::isPipeEmpty()
 
 void TorusInternal::setPipeLevel(int nLevel)
 {
-	for_each( m_pPV->begin(), m_pPV->end(), set_level( nLevel ) );
+    for_each( m_pPV->begin(), m_pPV->end(), torus::set_level( nLevel ) );
 }
 
 
 
 void TorusInternal::setPipeBlockSize(int nBlockSize)
 {
-	for_each( m_pPV->begin(), m_pPV->end(), set_block_size( nBlockSize ) );
+    for_each( m_pPV->begin(), m_pPV->end(), torus::set_block_size( nBlockSize ) );
 
 //	redraw();
 }
@@ -764,7 +764,7 @@ int TorusInternal::moveTorus()
 
 
 	//	각각의  토러스를 이동.
-	for_each( m_pRV->begin(), m_pRV->end(), move_toruses( getDifficulty() ) );
+    for_each( m_pRV->begin(), m_pRV->end(), torus::move_toruses( getDifficulty() ) );
 
 	int nRVSize	=	m_pRV->size();
 	for( int i = 0; i < nRVSize; i++ )
@@ -825,7 +825,7 @@ void TorusInternal::initRoll( int nLevel )
 		insertRoller();
 	}
 
-	for_each( m_pRV->begin(), m_pRV->end(), wrap_torus() );
+    for_each( m_pRV->begin(), m_pRV->end(), torus::wrap_torus() );
 }
 
 

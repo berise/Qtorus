@@ -5,6 +5,10 @@
 #include "roller.h"
 #include "pipe.h"
 
+
+namespace torus {
+
+
 //	객체를 지우는 
 template<class T>
 struct delete_object : public std::unary_function<const T*, void>
@@ -212,3 +216,6 @@ struct  set_roller_height: public std::unary_function< TRoller *, void >
 
 	int m_nHeight;
 };
+
+
+}
