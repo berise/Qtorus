@@ -57,6 +57,8 @@ public:
 
     void flipWidget();
 
+    void initialize();
+
 protected:
     void closeEvent(QCloseEvent *event);
     void keyPressEvent(QKeyEvent *event);
@@ -77,29 +79,10 @@ private:
 
 
 
-    void createActions();
-    void createMenus();
-    void createToolBars();
-    void createStatusBar();
 
-//    QTextEdit *textEdit;
     QString curFile;
+    QString config_file;
 
-    QMenu *fileMenu;
-    QMenu *editMenu;
-    QMenu *helpMenu;
-    QToolBar *fileToolBar;
-    QToolBar *editToolBar;
-    QAction *newAct;
-    QAction *openAct;
-    QAction *saveAct;
-    QAction *saveAsAct;
-    QAction *exitAct;
-    QAction *cutAct;
-    QAction *copyAct;
-    QAction *pasteAct;
-    QAction *aboutAct;
-    QAction *aboutQtAct;
 };
 
 #endif

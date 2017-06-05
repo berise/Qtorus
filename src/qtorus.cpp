@@ -11,6 +11,21 @@
 #include "ui_mainwindow.h"
 #include "ui_preferencedialog.h"
 
+
+
+class TreeWidgetItem : public QTreeWidgetItem {
+  public:
+  TreeWidgetItem(QTreeWidget* parent):QTreeWidgetItem(parent){}
+  private:
+  bool operator<(const QTreeWidgetItem &other)const {
+     int column = treeWidget()->sortColumn();
+     if (column != 1)
+         return text(column).toInt() < other.text(column).toInt();
+  }
+};
+
+
+
 /*
  * QString executableDirPath( QApplication & aQApp )
 {
@@ -53,17 +68,21 @@ MainWindow::MainWindow(QWidget *parent):
     QMainWindow(parent),
     ui(new Ui_MainWindow)
 {
-    this->ui->setupUi(this);
+    this->ui->setupUi(this);    
 
 
     QTreeWidgetItem* header = new QTreeWidgetItem;
     header->setText(0, "Rank");
     header->setText(1, "Name");
     header->setText(2, "Score");
+
     ui->treeWidget->setHeaderItem(header);
     ui->treeWidget->setColumnWidth(0, 50);
-    ui->treeWidget->setColumnWidth(1, 160);
-    this->readScore();
+    ui->treeWidget->setColumnWidth(1, 160);    
+    ui->treeWidget->header()->setSectionResizeMode(QHeaderView::Fixed);
+    ui->treeWidget->setSortingEnabled(true);
+    ui->treeWidget->sortByColumn(2, Qt::DescendingOrder);
+    this->readScore();    
 
 
     torus_view = new TorusView(this);
@@ -92,6 +111,9 @@ MainWindow::MainWindow(QWidget *parent):
 
 
     setWindowTitle(tr("Qtorus - by berise@gmail.com"));
+
+    //
+    initialize();
 
 }
 
@@ -126,9 +148,8 @@ void MainWindow::readScore()
         {
             stream >> sd;
 
-            qDebug() << sd.theName << sd.theScore;
-
-            QTreeWidgetItem* item = new QTreeWidgetItem;
+            //qDebug() << sd.theName << sd.theScore;
+            TreeWidgetItem* item = new TreeWidgetItem(this->ui->treeWidget);
             item->setText(0, QString::number(i+1));
             item->setText(1, sd.theName);
             item->setText(2, QString::number(sd.theScore));
@@ -136,6 +157,50 @@ void MainWindow::readScore()
         }
     }
     f.close();
+}
+
+
+void MainWindow::initialize()
+{
+    config_file = QApplication::applicationDirPath() + "/torus.ini";
+
+
+    bool is_exist = QFile::exists( config_file );
+
+    if( is_exist == true )
+    {
+        //	파일을 읽고 난 후, 리스트 뷰에 출력을 위해서
+        //	최대값 정렬이 필요하다.(이게 더 편함)
+        //read();
+    }
+    else
+    {
+        QSettings * settings = new QSettings(config_file, QSettings::IniFormat);
+
+        settings->beginGroup("preference");
+        settings->setValue("extra_torus", 0);
+        settings->setValue("difficulty", 3);
+        settings->setValue("starting_level", 3);
+        settings->endGroup();
+
+
+        const char *names[] = { "Torus Wizard", "Torus Guru", "Torus Master", "Torus Fanatic", "Torus Expert",
+                                "Torus Discipline", "Apprentice", "Intermediate", "Torus Beginner", "What is Torus?" };
+        const int scores[] = { 500000, 400000, 300000, 240000, 180000, 140000, 80000, 40000, 20000, 10000 };
+
+        //settings->beginGroup("players");
+        settings->beginWriteArray("players");
+        for(int i = 0; i < 10; i++)
+        {
+            QString name = QString("%1").arg(names[i]);
+            settings->setValue(name, scores[i]);
+        }
+        //settings->endGroup();
+        settings->endArray();
+
+        delete settings;
+    }
+
 }
 
 MainWindow::~MainWindow()
@@ -199,10 +264,37 @@ void MainWindow::action_qtorus()
 
 void MainWindow::action_preference()
 {
+    QSettings * settings = new QSettings(config_file, QSettings::IniFormat);
+
+
+    int extra = settings->value("preference/extra_torus").toInt();
+    int difficulty = settings->value("preference/difficulty").toInt();
+    int level = settings->value("preference/starting_level").toInt();
+
+
+
     Ui::PreferenceDialog ui_pd;
+
     QDialog *dialog = new QDialog;
     ui_pd.setupUi(dialog);
-    dialog->show();
+    ui_pd.horizontalSlider->setValue(level);
+    ui_pd.checkBox_enable->setChecked(extra);
+    dialog->exec();
+
+
+    settings->beginGroup("preference");
+    settings->setValue("extra_torus", ui_pd.checkBox_enable->isChecked());
+    settings->setValue("starting_level", ui_pd.lcdNumber->value());
+
+    if (ui_pd.radioButton->isChecked())
+        settings->setValue("difficulty", 1);
+    else if(ui_pd.radioButton_2->isChecked())
+        settings->setValue("difficulty", 2);
+    else
+        settings->setValue("difficulty", 3);
+    settings->endGroup();
+    delete settings;
+
 }
 
 
