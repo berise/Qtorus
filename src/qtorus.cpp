@@ -13,15 +13,18 @@
 
 
 
+// Top 10 player items
 class TreeWidgetItem : public QTreeWidgetItem {
-  public:
-  TreeWidgetItem(QTreeWidget* parent):QTreeWidgetItem(parent){}
-  private:
-  bool operator<(const QTreeWidgetItem &other)const {
-     int column = treeWidget()->sortColumn();
-     if (column != 1)
-         return text(column).toInt() < other.text(column).toInt();
-  }
+public:
+    TreeWidgetItem(QTreeWidget* parent):QTreeWidgetItem(parent){}
+private:
+    bool operator<(const QTreeWidgetItem &other)const {
+        int column = treeWidget()->sortColumn();
+        if (column != 0)
+            return text(column).toInt() < other.text(column).toInt();
+        else
+            return text(column) < other.text(column);
+    }
 };
 
 
@@ -72,17 +75,16 @@ MainWindow::MainWindow(QWidget *parent):
 
 
     QTreeWidgetItem* header = new QTreeWidgetItem;
-    header->setText(0, "Rank");
-    header->setText(1, "Name");
-    header->setText(2, "Score");
+    //header->setText(0, "Rank");
+    header->setText(0, "Name");
+    header->setText(1, "Score");
 
     ui->treeWidget->setHeaderItem(header);
-    ui->treeWidget->setColumnWidth(0, 50);
-    ui->treeWidget->setColumnWidth(1, 160);    
-    ui->treeWidget->header()->setSectionResizeMode(QHeaderView::Fixed);
+    ui->treeWidget->setColumnWidth(0, 250);
+    //ui->treeWidget->setColumnWidth(1, 300);
+    ui->treeWidget->header()->setSectionResizeMode(QHeaderView::Stretch);
     ui->treeWidget->setSortingEnabled(true);
-    ui->treeWidget->sortByColumn(2, Qt::DescendingOrder);
-    this->readScore();    
+    ui->treeWidget->sortByColumn(1, Qt::DescendingOrder);
 
 
     torus_view = new TorusView(this);
@@ -99,15 +101,10 @@ MainWindow::MainWindow(QWidget *parent):
     //readSettings(); 
     //setCurrentFile("");    
 
-    connect(this->ui->action_Preference,    SIGNAL(triggered()),
-            this, SLOT(action_preference()));
-    connect(this->ui->actionE_xit,          SIGNAL(triggered()),
-            this, SLOT(action_exit()));
-
-    connect(this->ui->actionQtorus,       SIGNAL(triggered()),
-            this, SLOT(action_qtorus()));
-    connect(this->ui->actionAbout_Qt,       SIGNAL(triggered()),
-            this, SLOT(action_qt()));
+    connect(this->ui->action_Preference, SIGNAL(triggered()), this, SLOT(action_preference()));
+    connect(this->ui->actionE_xit,       SIGNAL(triggered()), this, SLOT(action_exit()));
+    connect(this->ui->actionQtorus,      SIGNAL(triggered()), this, SLOT(action_qtorus()));
+    connect(this->ui->actionAbout_Qt,    SIGNAL(triggered()), this, SLOT(action_qt()));
 
 
     setWindowTitle(tr("Qtorus - by berise@gmail.com"));
@@ -134,9 +131,10 @@ void MainWindow::readScore()
     */
 
     //	top players 을 기록한 경우, 점수 입력.
-    TScoreFile *m_pScoreFile	= new TScoreFile;
-    delete m_pScoreFile;
+    //TScoreFile *m_pScoreFile	= new TScoreFile;
+    //delete m_pScoreFile;
 
+    /*
     QFile f(TORUS_SCORE_FILE);
     QDataStream stream(&f);
     ScoreData sd;
@@ -157,6 +155,28 @@ void MainWindow::readScore()
         }
     }
     f.close();
+    */
+
+    QSettings * settings = new QSettings(config_file, QSettings::IniFormat);
+    int size = settings->beginReadArray("players");
+    QStringList keys = settings->allKeys();
+
+    for(int i = 0; i < keys.size()-1; i++)
+    {
+        //settings->setArrayIndex(i);
+
+        int value = settings->value(keys.at(i)).toInt();
+        qDebug() << value <<  keys.at(i);
+
+        TreeWidgetItem* item = new TreeWidgetItem(this->ui->treeWidget);
+        //item->setText(0, QString::number(i+1));
+        item->setText(0, keys.at(i));
+        item->setText(1, QString::number(value));
+        this->ui->treeWidget->insertTopLevelItem(i, item);
+
+    }
+    settings->endArray();
+    delete settings;
 }
 
 
@@ -184,14 +204,16 @@ void MainWindow::initialize()
         settings->endGroup();
 
 
-        const char *names[] = { "Torus Wizard", "Torus Guru", "Torus Master", "Torus Fanatic", "Torus Expert",
-                                "Torus Discipline", "Apprentice", "Intermediate", "Torus Beginner", "What is Torus?" };
-        const int scores[] = { 500000, 400000, 300000, 240000, 180000, 140000, 80000, 40000, 20000, 10000 };
+        const char *names[] = { "Wizard", "Guru", "Master(Near CTS)", "Fanatic", "Expert",
+                                "Discipline", "Apprentice", "Intermediate", "Beginner", "What is Torus?" };
+        const int scores[] = { 500000, 400000, 300000, 240000, 180000,
+                               140000, 80000, 40000, 20000, 10000 };
 
         //settings->beginGroup("players");
         settings->beginWriteArray("players");
         for(int i = 0; i < 10; i++)
         {
+            //settings->setArrayIndex(i);
             QString name = QString("%1").arg(names[i]);
             settings->setValue(name, scores[i]);
         }
@@ -200,6 +222,10 @@ void MainWindow::initialize()
 
         delete settings;
     }
+
+
+    //
+    this->readScore();
 
 }
 
@@ -214,19 +240,18 @@ void MainWindow::closeEvent(QCloseEvent *)
 
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
-{
-    Q_UNUSED(event);
-
+{    
     QString keyPress;
+
     if (event->key() == Qt::Key_Space)
-    {
-        keyPress.sprintf("Qt::Key_Space(%d) pressed", event->key());
+    {        
         this->flipWidget();
         this->ui->stackedWidget->currentWidget();
         torus_view->startGame();
         //torus_view->setFocus();
     }
 
+    keyPress.sprintf("Key code : %d", event->key());
     this->ui->statusbar->showMessage(keyPress);
 
     QWidget::keyPressEvent(event);
