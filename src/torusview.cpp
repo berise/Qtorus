@@ -14,7 +14,7 @@
 #include "torusinternal.h"
 #include "torusview.h"
 #include "scorefile.h"
-#include "ui_top10dialog.h"
+
 
 #include "../res/toruses.h"
 #include "../res/sidebar.h"
@@ -631,20 +631,20 @@ void TorusView::gainPoint( int row, ClearMethod aClearMethod, bool isAllClear )
 	int ROW_POINT = 0;
 	int METHOD_POINT = 0;
 	int current_point = 0;;
-	const int nLevelModifier = m_pTI->getLevel();
+    const int nLevel = m_pTI->getLevel();
 
 	
-	METHOD_POINT = BASE_POINT + ( (nLevelModifier - 2) * LEVEL_POINT);
+    METHOD_POINT = BASE_POINT + ( (nLevel - 2) * LEVEL_POINT);
 
 	if( aClearMethod == TORUS_CLEAR_ROW_BY_PIN )
 	{
 		METHOD_POINT /= 2;		
 	}
 
-	 // row modifier
+    // row modifier
 	if( row > 0 )
 	{
-		ROW_POINT = row * 200 * (nLevelModifier-2);
+        ROW_POINT = row * 200 * (nLevel-2);
 	}
 
 	if( isAllClear == true )
@@ -653,7 +653,7 @@ void TorusView::gainPoint( int row, ClearMethod aClearMethod, bool isAllClear )
 
 		//	series of  all clear is..
 		//	An = 3n^2
-		ALL_CLEAR_POINT = 3000 * ( nLevelModifier  - 2 ) * ( nLevelModifier  - 2 );
+        ALL_CLEAR_POINT = 3000 * ( nLevel  - 2 ) * ( nLevel  - 2 );
 		
 	}
 
@@ -699,8 +699,7 @@ void TorusView::gainPoint( int row, ClearMethod aClearMethod, bool isAllClear )
 	wxsMessage += wxsModifier;
 
     // MainWindow::CentralWidget::stackedWidget::page[1-N]
-    QMainWindow *main_window = reinterpret_cast<QMainWindow*>(parentWidget()->parentWidget()->parentWidget());
-    //QString t = main_window->objectName();
+    QMainWindow *main_window = reinterpret_cast<QMainWindow*>(parentWidget()->parentWidget()->parentWidget());    
     QStatusBar *sb = main_window->statusBar();
     sb->showMessage(wxsMessage);
 
@@ -708,15 +707,7 @@ void TorusView::gainPoint( int row, ClearMethod aClearMethod, bool isAllClear )
 	//	draw line
 	draw_clear_line = row;
 	//m_pTimer->stop();
-	QTimer::singleShot(100, this, SLOT(invalidateClearLine()));
-	
-	/*
-	// pause timer for about 99 ms.	
-	drawClearLine( row );
-//	m_pTimer->stop(); 
-  Sleeper::msleep(520);	//	sleep for 99 ms to show cleared line	
-//	m_pTimer->start();	//	restart with previous timer value 
-*/
+	QTimer::singleShot(100, this, SLOT(invalidateClearLine()));	
 	
 	//	TRICK을 증가시킬때...	
 	if( ( m_nLine % TORUS_COUNT_TRICK ) == 0 )
@@ -893,13 +884,8 @@ void	TorusView::startGame()
 
 	m_GameState	=	GAME_RUN;
 
-/*
-	MyFrame *f = (MyFrame*)wxGetApp().GetTopWindow();
+    //main_window->statusBar()->showMessage("Start game!!!");
 
-	wxString message; 
-	message.Printf("Start game!");
-	f->SetStatusText( message ); 
-	*/
 }
 
 void	TorusView::stopGame()
@@ -945,46 +931,19 @@ int TorusView::getLevel()
 
 void TorusView::OnGameOver()
 {
-	stopGame();
+	stopGame();    
 
 	//	게임 오버와 동시에 설정의 레벨로 변경.
 	//m_Level = getLevel();
 
-	
-	//	top players 을 기록한 경우, 점수 입력.	
-	m_pScoreFile	= new TScoreFile;
+    MainWindow *main_window = reinterpret_cast<MainWindow*>(parentWidget()->parentWidget()->parentWidget());
 
-	//	TScoreFile의 sort predicate인 MinScore과 상응해야 한다.
-	if( m_nScore > m_pScoreFile->getMinScore() )
-	{	
-        Ui::Top10Dialog	td;
+    // let player check screen.
+    main_window->on_gameover(m_nScore);
 
-        QDialog *dialog = new QDialog;
-        td.setupUi(dialog);
+    //
+    main_window->flipWidget();
 
-        if(dialog->exec() == QDialog::Accepted) // YesButton clicked }
-		{
-			//wxMessageBox( td.m_wxsName ); 
-            m_pScoreFile->push_back( td.player_name->text().toUtf8(), m_nScore );
-		}
-		else
-		{
-			m_pScoreFile->push_back( "Noname", m_nScore );
-		}
-		m_pScoreFile->write();
-	} 
-	delete m_pScoreFile;
-	
-
-	// 
-	/*
-	MyFrame *f = (MyFrame*)wxGetApp().GetTopWindow();
-	f->SwitchPanel();
-
-	wxString message; 
-	message.Printf("Thank you for playing wxTorus. Copyright (c) JaeSung Lee");
-	f->SetStatusText( message );
-	*/
 }
 
 

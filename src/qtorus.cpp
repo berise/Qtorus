@@ -10,6 +10,7 @@
 
 #include "ui_mainwindow.h"
 #include "ui_preferencedialog.h"
+#include "ui_top10dialog.h"
 
 
 
@@ -116,46 +117,8 @@ MainWindow::MainWindow(QWidget *parent):
 
 void MainWindow::readScore()
 {
-/*
-    const char *names[] = { "Torus Wizard", "Torus Guru", "Torus Master", "Torus Fanatic", "Torus Expert",
-                          "Torus Discipline", "Torus Apprentice", "Torus Novice", "Torus Beginner", "What is Torus?" };
-    const char *scores[] = {"1", "2", "3", "4", "5","6", "7", "8", "9", "10"};
-    for(int i = 0; i < 10; i++)
-    {
-        QTreeWidgetItem* item = new QTreeWidgetItem;
-        item->setText(0, scores[i]);
-        item->setText(1, names[i]);
-        item->setText(2, scores[i]);
-        this->ui->treeWidget->insertTopLevelItem(i, item);
-    }
-    */
+    this->ui->treeWidget->clear();
 
-    //	top players 을 기록한 경우, 점수 입력.
-    //TScoreFile *m_pScoreFile	= new TScoreFile;
-    //delete m_pScoreFile;
-
-    /*
-    QFile f(TORUS_SCORE_FILE);
-    QDataStream stream(&f);
-    ScoreData sd;
-
-    if( f.open(QIODevice::ReadOnly) == true )
-    {        
-        //while( f.atEnd() != true )
-        for(int i = 0; i < 10; i++)
-        {
-            stream >> sd;
-
-            //qDebug() << sd.theName << sd.theScore;
-            TreeWidgetItem* item = new TreeWidgetItem(this->ui->treeWidget);
-            item->setText(0, QString::number(i+1));
-            item->setText(1, sd.theName);
-            item->setText(2, QString::number(sd.theScore));
-            this->ui->treeWidget->insertTopLevelItem(i, item);
-        }
-    }
-    f.close();
-    */
 
     QSettings * settings = new QSettings(config_file, QSettings::IniFormat);
     int size = settings->beginReadArray("players");
@@ -166,7 +129,7 @@ void MainWindow::readScore()
         //settings->setArrayIndex(i);
 
         int value = settings->value(keys.at(i)).toInt();
-        qDebug() << value <<  keys.at(i);
+        //qDebug() << value <<  keys.at(i);
 
         TreeWidgetItem* item = new TreeWidgetItem(this->ui->treeWidget);
         //item->setText(0, QString::number(i+1));
@@ -227,6 +190,65 @@ void MainWindow::initialize()
     //
     this->readScore();
 
+}
+
+
+// torusview->on_gameover(score);
+// read score and compare with score then get your name if within top 10.
+void MainWindow::on_gameover(int score)
+{
+    QSettings * settings = new QSettings(config_file, QSettings::IniFormat);
+    int size = settings->beginReadArray("players");
+    QStringList keys = settings->allKeys();
+
+    // sorted map ordered by key(score)
+    QMap<int, QString> map;
+
+    int scores[10];
+
+    for(int i = 0; i < keys.size()-1; i++)
+    {
+        int value = settings->value(keys.at(i)).toInt();
+        map.insert(settings->value(keys.at(i)).toInt(), keys.at(i));
+    }
+
+    int rrank = 10;
+    QString vk; // value_as_a_key
+    QMap<int, QString>::iterator i = map.begin();
+    for( ; i != map.end(); i++)
+    {
+        int t = i.key();
+        if( score > t)
+        {
+            vk = i.value();
+            rrank--;
+        }
+        else
+        {
+            break;
+        }
+
+    }
+
+
+    if (rrank < 10)
+    {
+        Ui::Top10Dialog	td;
+        QDialog *dialog = new QDialog;
+        td.setupUi(dialog);
+
+        if(dialog->exec() == QDialog::Accepted) // YesButton clicked
+        {
+            settings->remove(vk);   // remove previous value
+            settings->setValue(td.player_name->text().toUtf8(), score);
+        }
+    }
+
+    settings->endArray();
+    delete settings;
+
+    //
+    this->readScore();
 }
 
 MainWindow::~MainWindow()

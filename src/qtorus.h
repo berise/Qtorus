@@ -42,9 +42,7 @@
 
 #include <QMainWindow>
 
-class QAction;
-class QMenu;
-class QTextEdit;
+
 class Ui_MainWindow;
 
 class MainWindow : public QMainWindow
@@ -58,6 +56,7 @@ public:
     void flipWidget();
 
     void initialize();
+    void on_gameover(int score);
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -76,7 +75,6 @@ public slots:
 private:
     Ui_MainWindow *ui;
     void readScore();
-
 
 
 
