@@ -199,13 +199,13 @@ void TorusView::keyPressEvent( QKeyEvent *event )
 						
 					case GAME_RUN:
 						pauseGame();
-                        main_window->flipWidget();
+                        //main_window->flipWidget();
 
 						break;
 
 					case GAME_PAUSE:
 						resume();
-                        main_window->flipWidget();
+                        //main_window->flipWidget();
 
 						break;
 
@@ -219,8 +219,7 @@ void TorusView::keyPressEvent( QKeyEvent *event )
 			break;
 
 	case Qt::Key_Escape:
-        if( m_GameState == GAME_PAUSE )
-        if( m_GameState == GAME_RUN )
+        if( m_GameState == GAME_PAUSE)
 		{
 			stopGame();			
 

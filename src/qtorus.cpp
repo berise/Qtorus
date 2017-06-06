@@ -245,10 +245,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
     if (event->key() == Qt::Key_Space)
     {        
-        this->flipWidget();
-        this->ui->stackedWidget->currentWidget();
+        this->flipWidget();        
         torus_view->startGame();
-        //torus_view->setFocus();
     }
 
     keyPress.sprintf("Key code : %d", event->key());
