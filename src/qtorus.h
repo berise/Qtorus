@@ -42,9 +42,7 @@
 
 #include <QMainWindow>
 
-class QAction;
-class QMenu;
-class QTextEdit;
+
 class Ui_MainWindow;
 
 class MainWindow : public QMainWindow
@@ -56,6 +54,9 @@ public:
     ~MainWindow();
 
     void flipWidget();
+
+    void initialize();
+    void on_gameover(int score);
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -77,29 +78,9 @@ private:
 
 
 
-    void createActions();
-    void createMenus();
-    void createToolBars();
-    void createStatusBar();
-
-//    QTextEdit *textEdit;
     QString curFile;
+    QString config_file;
 
-    QMenu *fileMenu;
-    QMenu *editMenu;
-    QMenu *helpMenu;
-    QToolBar *fileToolBar;
-    QToolBar *editToolBar;
-    QAction *newAct;
-    QAction *openAct;
-    QAction *saveAct;
-    QAction *saveAsAct;
-    QAction *exitAct;
-    QAction *cutAct;
-    QAction *copyAct;
-    QAction *pasteAct;
-    QAction *aboutAct;
-    QAction *aboutQtAct;
 };
 
 #endif

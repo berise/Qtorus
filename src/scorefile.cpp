@@ -40,19 +40,7 @@ struct MaxScore: public std::binary_function< ScoreData, ScoreData, bool >
 TScoreFile::TScoreFile( )
 :m_bDirty( false )
 {
-	bool is_exist = QFile::exists( TORUS_SCORE_FILE );
-
-	if( is_exist == true )
-	{
-		//	파일을 읽고 난 후, 리스트 뷰에 출력을 위해서
-		//	최대값 정렬이 필요하다.(이게 더 편함)
-		read();		
-	}
-	else
-	{
-		initialize();
-		write();		
-	}
+    initialize();
 }
 
 TScoreFile::~TScoreFile()
@@ -70,22 +58,36 @@ TScoreFile::~TScoreFile()
 //	기본 점수로 모두 채운다.
 void	TScoreFile::initialize()
 {
-	/*
-	 * 	predefined top 10 players
-	 */
-	theScoreVector.clear();
 
-	push_back( "The Wizard!",		500000 );
-	push_back( "Torus Guru",		400000 );
-	push_back( "Torus Fanatic",		300000 );
-	push_back( "Professional",		240000 );
-	push_back( "Torus Master",		180000 );
+    bool is_exist = QFile::exists( TORUS_SCORE_FILE );
 
-	push_back( "Discipline",		140000 );
-	push_back( "Apprentice",		80000 );
-	push_back( "Intermediate",		40000 );
-	push_back( "Beginner",			20000 );
-	push_back( "Novice",			10000 );
+    if( is_exist == true )
+    {
+        //	파일을 읽고 난 후, 리스트 뷰에 출력을 위해서
+        //	최대값 정렬이 필요하다.(이게 더 편함)
+        read();
+    }
+    else
+    {
+        /*
+         * 	predefined top 10 players
+         */
+        theScoreVector.clear();
+
+        push_back( "The Wizard!",		500000 );
+        push_back( "Torus Guru",		400000 );
+        push_back( "Torus Fanatic",		300000 );
+        push_back( "Professional",		240000 );
+        push_back( "Torus Master",		180000 );
+
+        push_back( "Discipline",		140000 );
+        push_back( "Apprentice",		80000 );
+        push_back( "Intermediate",		40000 );
+        push_back( "Beginner",			20000 );
+        push_back( "Novice",			10000 );
+        write();
+    }
+
 }
 
 
