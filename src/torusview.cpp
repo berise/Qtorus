@@ -786,7 +786,7 @@ void TorusView::gainPoint( int row, ClearMethod aClearMethod)
 
 	//QApplication::activeWidget();
 
-    emit message(wxsMessage);
+    //emit message(wxsMessage);
     /*
 	QMainWindow *main_window = reinterpret_cast<QMainWindow*>(parentWidget());
 	main_window->statusBar()->showMessage(wxsMessage);
