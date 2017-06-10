@@ -1,6 +1,7 @@
 # Warning
 This is game is under development.
-But I'm expect that this warning will be removed soon.
+~~But I'm expect that this warning will be removed soon.~~
+But it is now playable.
 
 What is Qtorus
 ===============
@@ -11,18 +12,23 @@ protruding pipes.
 Have you seen this game before? yes, it is a port of DOS(R) torus game.
 Yes, yes, it's another port of [wxTorus](https://github.com/berise/wxTorus)
 
+<pre>
+<img src=https://github.com/berise/Qtorus/blob/master/doc/qtorus_01.png width=180> <img src=https://github.com/berise/Qtorus/blob/master/doc/qtorus_02.png width=180>
+</pre>
+
 How to play
 -----------
 Use your arrow keys in your keyboard and align your toruses in a row with same color.
-I'll add VIM keys for vim lovers.
+It is also able to use hjkl(VIM keys) for vim lovers.
 
+MOVE : ARROW Keys or hjkl.
 Space : to start or pause a game.
-ESE to quit a game.
+ESC to pause & quit a game.
 
 Build
 -----
 Qtorus is currently using Qt 5.8 version.
-So please install Qt first and qmake and make.
+So install Qt first and qmake and make.
 If you use QCreator then load qtorus.pro and build.
 
 HISTORY
