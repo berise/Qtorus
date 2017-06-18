@@ -13,7 +13,7 @@ Have you seen this game before? yes, it is a port of DOS(R) torus game.
 Yes, yes, it's another port of [wxTorus](https://github.com/berise/wxTorus)
 
 <pre>
-<img src=https://github.com/berise/Qtorus/blob/master/doc/qtorus_01.png width=180> <img src=https://github.com/berise/Qtorus/blob/master/doc/qtorus_02.png width=180>
+<img src=https://github.com/berise/Qtorus/blob/master/doc/qtorus_03.gif width=180> <img src=https://github.com/berise/Qtorus/blob/master/doc/qtorus_01.png width=180> <img src=https://github.com/berise/Qtorus/blob/master/doc/qtorus_02.png width=180>
 </pre>
 
 How to play
@@ -33,7 +33,7 @@ If you use QCreator then load qtorus.pro and build.
 
 HISTORY
 -------
-This game(torus) is initially started in 1998 with Qt(ver 0.98) to run in X-Windows
-as clone of a dos game named Torus(R). And then port it to Win32 with VWCL.
-Later on, I port it to use wxWidget and named it kTorus registered
-to sourceforce.net as a [ktorus](https://sourceforge.net/projects/ktorus).
+I started to make this game with Qt 0.98 to run in X-Windows
+as a clone of dos game named Torus(R). And then port it to Win32 with VWCL uploaded
+to sourceforge as a [ktorus](https://sourceforge.net/projects/ktorus).
+Later on, I port it to use wxWidget.
